@@ -1,0 +1,8 @@
+{{- include "adp-helm-library.deployment" (list . "crai-twiki-api.deployment") -}}
+{{- define "crai-twiki-api.deployment" -}}
+spec:
+  template:
+    spec:
+      containers:
+      - {{ include "adp-helm-library.container" (list . "crai-twiki-api.container") }}
+{{- end -}}

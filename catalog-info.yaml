@@ -1,0 +1,36 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: crai-twiki-api
+  description: Backend Node API for observing / logging LLM application events
+  annotations:
+    github.com/project-slug: DEFRA/crai-twiki-api
+    dev.azure.com/project: DEFRA-AI
+    dev.azure.com/build-definition: crai-twiki-api
+    sonarqube.org/project-key: crai-twiki-api
+    grafana/dashboard-selector: "folderTitle == 'Managed Prometheus'"
+    backstage.io/kubernetes-id: crai-twiki-api
+  links:
+    - url: https://github.com/DEFRA/crai-twiki-api
+      title: GitHub Repository
+      icon: github
+    - url: https://dev.azure.com/defragovuk/DEFRA-AI
+      title: Azure DevOps Project
+      icon: project
+    - url: https://sonarcloud.io/project/overview?id=crai-twiki-api
+      title: SonarCloud Analysis
+      icon: check
+    - url: https://snyk.io/test/github/DEFRA/crai-twiki-api
+      title: Snyk Analysis
+      icon: policy
+    - url: https://portal.azure.com/defradev.onmicrosoft.com
+      title: Azure Portal - Defra Dev
+      icon: cloud
+    - url: https://portal.azure.com/Defra.onmicrosoft.com
+      title: Azure Portal - Defra
+      icon: cloud
+spec:
+  type: backend
+  lifecycle: discovery
+  owner: group:default/crai-mcu
+  

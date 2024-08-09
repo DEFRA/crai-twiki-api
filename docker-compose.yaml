@@ -1,0 +1,20 @@
+services:
+  ? crai-twiki-api
+  : build:
+      context: .
+      target: production
+    image: crai-twiki-api
+    container_name: crai-twiki-api
+    depends_on:
+      - crai-twiki-api-postgres
+    environment:
+      APPINSIGHTS_CLOUDROLE: crai-twiki-api-local
+      APPINSIGHTS_CONNECTIONSTRING: ${APPINSIGHTS_CONNECTIONSTRING}
+
+
+  ? crai-twiki-api-postgres
+  : image: postgres:15.6-alpine
+    environment:
+      POSTGRES_DB: crai-twiki-api
+      POSTGRES_PASSWORD: ppp
+      POSTGRES_USERNAME: postgres

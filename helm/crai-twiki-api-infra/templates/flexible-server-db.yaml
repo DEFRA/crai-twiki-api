@@ -1,0 +1,6 @@
+
+{{- include "adp-aso-helm-library.flexible-servers-db" (list . "crai-twiki-api.flexible-servers-db") -}}
+
+{{- define "crai-twiki-api.flexible-servers-db" }}
+{{ end -}}
+
