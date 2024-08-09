@@ -1,17 +1,92 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+    http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+
     <changeSet author="DEFRA" id="1596009647200-0">
-      <tagDatabase tag="v0.0.0" />
+        <tagDatabase tag="v0.0.0"/>
     </changeSet>
+
     <changeSet author="DEFRA" id="1596009647200-1">
-      <tagDatabase tag="v1.0.0" />
+        <tagDatabase tag="v1.0.0"/>
     </changeSet>
-    <changeSet author="liquibase (generated)" id="1596009647200-2">
-        <createTable tableName="backend">
-            <column name="id" type="VARCHAR(255)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="claims_pkey"/>
+
+    <changeSet author="Shaun Fitzsimons" id="1596009647200-2">
+        <createTable tableName="project">
+            <column name="id" type="INTEGER">
+                <constraints primaryKey="true" nullable="false" />
             </column>
-            <column name="name" type="VARCHAR(255)"/>
+            <column name="name" type="TEXT">
+                <constraints nullable="false" />
+            </column>
+            <column name="created_on" type="TIMESTAMP">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createTable tableName="type">
+            <column name="id" type="INTEGER">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="name" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="model">
+            <column name="id" type="INTEGER">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="name" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unit_cost" type="MONEY">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <createTable tableName="session">
+            <column name="id" type="INTEGER">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="project_id" type="INTEGER">
+                <constraints nullable="false" foreignKeyName="fk_session_project" references="project(id)" />
+            </column>
+            <column name="user" type="TEXT">
+                <constraints nullable="false" />
+            </column>
+            <column name="start_time" type="TIMESTAMP">
+                <constraints nullable="false" />
+            </column>
+            <column name="end_time" type="TIMESTAMP" />
+        </createTable>
+
+        <createTable tableName="event">
+            <column name="id" type="INTEGER">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="session_id" type="INTEGER">
+                <constraints nullable="false" foreignKeyName="fk_event_session" references="session(id)" />
+            </column>
+            <column name="type_id" type="INTEGER">
+                <constraints nullable="false" foreignKeyName="fk_event_type" references="type(id)" />
+            </column>
+            <column name="content" type="TEXT" />
+            <column name="time" type="TIMESTAMP">
+                <constraints nullable="false" />
+            </column>
+            <column name="model_name" type="TEXT">
+                <constraints nullable="false" />
+            </column>
+            <column name="model_metadata" type="JSONB" />
+            <column name="token_usage" type="INTEGER" />
+            <column name="cost" type="MONEY" />
+            <column name="additional_metadata" type="JSONB" />
         </createTable>
     </changeSet>
 </databaseChangeLog>
