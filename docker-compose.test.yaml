@@ -2,8 +2,8 @@
 # that test output is saved to the host
 
 services:
-  ? crai-twiki-api
-  : build:
+  crai-twiki-api:
+    build:
       target: development
     image: crai-twiki-api-development
     container_name: crai-twiki-api-test

@@ -2,8 +2,8 @@
 # to provide dependencies and expose ports for local testing
 
 services:
-  ? crai-twiki-api
-  : build:
+  crai-twiki-api:
+    build:
       target: development
     image: crai-twiki-api-development
     container_name: crai-twiki-api-development
@@ -17,8 +17,8 @@ services:
       - ./package.json:/home/node/package.json
       
 
-  ? crai-twiki-api-postgres
-  : ports:
+  crai-twiki-api-postgres:
+    ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
