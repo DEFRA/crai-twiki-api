@@ -1,0 +1,336 @@
+openapi: '3.0.3'
+info:
+  version: 1.0.0
+  title: Twiki API
+  description: API for LLM observations via Twiki
+paths:
+  /project:
+    get:
+      tags:
+        - project
+      summary: Get all projects
+      responses:
+        '200':
+          description: A list of projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+    post:
+      tags:
+        - project
+      summary: Create a new project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  pattern: '^[a-zA-Z0-9-]+$'
+              required: ['name']
+      responses:
+        '201':
+          description: Project created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  created_on:
+                    type: string
+                    format: date-time
+  /project/{projectId}:
+    get:
+      tags:
+        - project
+      summary: Get a project by ID
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The project ID
+      responses:
+        '200':
+          description: A project
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectSessions'
+  /project/{projectId}/overview:
+    get:
+      tags:
+        - project
+      summary: Get an overview of a project
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The project ID
+      responses:
+        '200':
+          description: A project overview
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectOverview'
+
+  /session:
+    post:
+      tags:
+        - session
+      summary: Create a new session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                project_id:
+                  type: string
+                user:
+                  type: string
+                start_time:
+                  type: string
+                  format: date-time
+                end_time:
+                  type: string
+                  format: date-time
+              required: ['project_id', 'name', 'start_time']
+      responses:
+        '201':
+          description: Session created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+  /session/{sessionId}:
+    get:
+      tags:
+        - session
+      summary: Get a session by ID
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The session ID
+      responses:
+        '200':
+          description: A session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionEvents'
+
+    patch:
+      tags:
+        - session
+      summary: Update a session by ID
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The session ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                end_time:
+                  type: string
+                  format: date-time
+      responses:
+        '200':
+          description: Session updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+  /event/{eventId}:
+    get:
+      tags:
+        - event
+      summary: Get an event by ID
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The event ID
+      responses:
+        '200':
+          description: An event
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+  /event:
+    post:
+      tags:
+        - event
+      summary: Create a new event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                session_id:
+                  type: string
+                type:
+                  type: string
+                content:
+                  type: string
+                timestamp:
+                  type: string
+                  format: date-time
+                model_name:
+                  type: string
+                model_metadata:
+                  type: object
+                  additionalProperties: true
+                token_usage:
+                  type: number
+                  format: int32
+                cost:
+                  type: number
+                  format: float
+                additional_properties:
+                  type: object
+                  additionalProperties: true
+              required: ['session_id', 'type', 'content', 'timestamp']
+      responses:
+        '201':
+          description: Event created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+components:
+  schemas:
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          pattern: '^[a-zA-Z0-9-]+$'
+        created_on:
+          type: string
+          format: date-time
+    Session:
+      type: object
+      properties:
+        id:
+          type: string
+        project_id:
+          type: string
+        user:
+          type: string
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+        session_id:
+          type: string
+        type:
+          type: string
+        content:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        model_name:
+          type: string
+        model_metadata:
+          type: object
+          additionalProperties: true
+        token_usage:
+          type: number
+          format: int32
+        cost:
+          type: number
+          format: float
+        additional_properties:
+          type: object
+          additionalProperties: true
+    ProjectOverview:
+      type: object
+      properties:
+        project:
+          $ref: '#/components/schemas/Project'
+        sessions:
+          type: object
+          properties:
+            session_count:
+              type: number
+              format: int32
+            average_latency:
+              type: number
+              format: float
+            event_count:
+              type: number
+              format: int32
+        model_usage:
+          type: array
+          items:
+            type: object
+            properties:
+              model_name:
+                type: string
+              token_usage:
+                type: number
+                format: int32
+              average_latency:
+                type: number
+                format: float
+              cost:
+                type: number
+                format: float
+    ProjectSessions:
+      type: object
+      properties:
+        project:
+          $ref: '#/components/schemas/Project'
+        sessions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Session'
+    SessionEvents:
+      type: object
+      properties:
+        session:
+          $ref: '#/components/schemas/Session'
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
