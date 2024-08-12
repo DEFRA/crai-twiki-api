@@ -1,4 +1,3 @@
-const Project = require('../models/project')
 const { database } = require('../database')
 
 /**
