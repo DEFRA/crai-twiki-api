@@ -1,6 +1,6 @@
 const Joi = require('joi')
-const { getSession, addSession } = require('../repos/sessions')
 const Session = require('../models/session')
+const { getSession, addSession, updateSession } = require('../repos/sessions')
 
 module.exports = [
   {
@@ -46,6 +46,30 @@ module.exports = [
 
         return h.response().code(500)
       }
+    }
+  },
+  {
+    method: 'PATCH',
+    path: '/session/{sessionId}',
+    options: {
+      validate: {
+        payload: Joi.object({
+          end_time: Joi.date().required()
+        }).required()
+      }
+    },
+    handler: async (request, h) => {
+      const { sessionId } = request.params
+
+      const session = await getSession(sessionId)
+
+      if (!session) {
+        return h.response().code(404)
+      }
+
+      const updated = await updateSession(sessionId, request.payload)
+
+      return h.response(updated).code(200)
     }
   }
 ]

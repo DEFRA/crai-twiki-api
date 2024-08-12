@@ -24,6 +24,23 @@ const addSession = async (session) => {
   return created[0]
 }
 
+const updateSession = async (id, session) => {
+  try {
+    const updated = await database('session')
+      .update({
+        end_time: session.end_time
+      })
+      .where('id', id)
+      .returning(['id', 'project_id', 'start_time', 'end_time'])
+
+    return updated[0]
+  } catch (err) {
+    console.error(`Error updating session: ${err}`)
+
+    throw err
+  }
+}
+
 const getSession = async (id) => {
   try {
     const sessions = await database('session')
@@ -35,11 +52,11 @@ const getSession = async (id) => {
         end_time: 'session.end_time'
       })
       .where('session.id', id)
-    
+
     if (!sessions.length) {
       return null
     }
-    
+
     return sessions[0]
   } catch (err) {
     console.error(`Error getting session: ${err}`)
@@ -51,5 +68,6 @@ const getSession = async (id) => {
 module.exports = {
   addSessions,
   addSession,
+  updateSession,
   getSession
 }
