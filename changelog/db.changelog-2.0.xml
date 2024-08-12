@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
@@ -7,7 +7,12 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
     http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd
     http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
-    
-    <include file="changelog/db.changelog-1.0.xml"/>
-    <include file="changelog/db.changelog-2.0.xml"/>
+
+    <changeSet author="Shaun Fitzsimons" id="1">
+        <tagDatabase tag="v2.0.0"/>
+    </changeSet>
+
+    <changeSet author="Shaun Fitzsimons" id="2">
+        <dropNotNullConstraint tableName="session" columnName="user" />
+    </changeSet>
 </databaseChangeLog>
