@@ -55,13 +55,36 @@ const getSession = async (id) => {
         start_time: 'session.start_time',
         end_time: 'session.end_time'
       })
+      .leftJoin('thread', 'session.id', 'thread.session_id')
       .where('session.id', id)
 
     if (!sessions.length) {
       return null
     }
 
-    return sessions[0]
+    const session = sessions.reduce((acc, curr) => {
+      if (!acc.id) {
+        acc.id = curr.id
+        acc.project_id = curr.project_id
+        acc.user = curr.user
+        acc.start_time = curr.start_time
+        acc.end_time = curr.end_time
+        acc.threads = []
+      }
+
+      if (curr.thread_id) {
+        acc.threads.push({
+          id: curr.thread_id,
+          name: curr.thread_name,
+          start_time: curr.thread_start_time,
+          end_time: curr.thread_end_time
+        })
+      }
+
+      return acc
+    }, {})
+
+    return session
   } catch (err) {
     console.error(`Error getting session: ${err}`)
 

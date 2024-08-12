@@ -103,7 +103,7 @@ paths:
             schema:
               type: object
               properties:
-                session_id:
+                id:
                   $ref: '#/components/schemas/uuid'
                 project_id:
                   $ref: '#/components/schemas/uuid'
@@ -171,30 +171,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Session'
-  /event/{eventId}:
-    get:
-      tags:
-        - event
-      summary: Get an event by ID
-      parameters:
-        - name: eventId
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/uuid'
-          description: The event ID
-      responses:
-        '200':
-          description: An event
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Event'
-  /event:
+  /thread:
     post:
       tags:
-        - event
-      summary: Create a new event
+        - thread
+      summary: Create a new thread
       requestBody:
         required: true
         content:
@@ -202,15 +183,93 @@ paths:
             schema:
               type: object
               properties:
+                id:
+                  $ref: '#/components/schemas/uuid'
                 session_id:
                   $ref: '#/components/schemas/uuid'
-                run_id:
+                name:
+                  type: string
+                start_time:
+                  type: string
+                  format: date-time
+                end_time:
+                  type: string
+                  format: date-time
+                input:
+                  type: string
+                output:
+                  type: string
+              required: ['id', 'project_id', 'name', 'input', 'output']
+      responses:
+        '201':
+          description: Thread created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/uuid'
+  /thread/{threadId}:
+    get:
+      tags:
+        - thread
+      summary: Get a thread by ID
+      parameters:
+        - name: threadId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+          description: The thread ID
+      responses:
+        '200':
+          description: A thread
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionThreads'
+
+  /step/{stepId}:
+    get:
+      tags:
+        - step
+      summary: Get an step by ID
+      parameters:
+        - name: stepId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+          description: The step ID
+      responses:
+        '200':
+          description: A step in a thread
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Step'
+  /step:
+    post:
+      tags:
+        - step
+      summary: Create a new step
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
                   $ref: '#/components/schemas/uuid'
+                thread_id:
+                  $ref: '#/components/schemas/uuid'
+                name:
+                  type: string
                 type:
                   type: string
-                content:
+                start_time:
                   type: string
-                timestamp:
+                  format: date-time
+                end_time:
                   type: string
                   format: date-time
                 model_name:
@@ -218,23 +277,24 @@ paths:
                 model_metadata:
                   type: object
                   additionalProperties: true
-                token_usage:
+                input:
+                  type: string
+                output:
+                  type: string
+                input_tokens:
                   type: number
                   format: int32
-                cost:
+                output_tokens:
                   type: number
-                  format: float
-                additional_properties:
-                  type: object
-                  additionalProperties: true
-              required: ['session_id', 'type', 'content', 'timestamp']
+                  format: int32
+              required: ['id', 'thread_id', 'name', 'type', 'start_time']  
       responses:
         '201':
-          description: Event created
+          description: Step created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Event'
+                $ref: '#/components/schemas/Step'
 components:
   schemas:
     Project:
@@ -263,20 +323,40 @@ components:
         end_time:
           type: string
           format: date-time
-    Event:
+    Thread:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        session_id:
+          $ref: '#/components/schemas/uuid'
+        name:
+          type: string
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        input:
+          type: string
+        output:
+          type: string
+    Step:
       type: object
       properties:
         id:
           $ref: '#/components/schemas/uuid'
         run_id:
           $ref: '#/components/schemas/uuid'
-        session_id:
+        name:
           type: string
         type:
           type: string
-        content:
+        start_time:
           type: string
-        timestamp:
+          format: date-time
+        end_time:
           type: string
           format: date-time
         model_name:
@@ -284,15 +364,12 @@ components:
         model_metadata:
           type: object
           additionalProperties: true
-        token_usage:
+        input_tokens:
           type: number
           format: int32
-        cost:
+        output_tokens:
           type: number
-          format: float
-        additional_properties:
-          type: object
-          additionalProperties: true
+          format: int32
     ProjectOverview:
       type: object
       properties:
@@ -340,15 +417,43 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Session'
-    SessionEvents:
+    SessionThreads:
       type: object
       properties:
-        session:
-          $ref: '#/components/schemas/Session'
-        events:
+        id: 
+          type: string
+        name:
+          type: string
+        created_on:
+          type: string
+          format: date-time
+        threads:
           type: array
           items:
-            $ref: '#/components/schemas/Event'
+            $ref: '#/components/schemas/Thread'
+    ThreadSteps:
+      type: object
+      properties:
+        id: 
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        input:
+          type: string
+        output:
+          type: string
+        steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/Step'
     uuid:
       type: string
       pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
