@@ -1,22 +1,13 @@
 class Project {
-  constructor (id, name, createdOn, sessions) {
-    this.id = id
-    this.name = name
-    this.created_on = createdOn
-
-    if (sessions) {
-      this.sessions = sessions
-    }
+  constructor(project) {
+    this.id = project.id
+    this.name = project.name
+    this.created_on = project.created_on || new Date()
+    this.sessions = project.sessions || []
   }
 
-  static fromPayload (payload) {
-    const project = new Project(
-      payload.id,
-      payload.name,
-      payload.created_on || new Date()
-    )
-
-    return project
+  addSession (session) {
+    this.sessions.push(session)
   }
 }
 

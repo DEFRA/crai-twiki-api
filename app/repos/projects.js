@@ -1,4 +1,5 @@
 const { database } = require('../database')
+const Project = require('../models/project')
 
 /**
  * Add multiple projects to datastore
@@ -8,12 +9,17 @@ const { database } = require('../database')
  * @returns {Promise<Project[]>} - Created projects
  */
 const addProjects = async (projects) => {
+  const data = projects.map(project => ({
+    name: project.name,
+    created_on: project.created_on
+  }))
+
   try {
     const created = await database
-      .batchInsert('project', projects)
+      .batchInsert('project', data)
       .returning(['id', 'name', 'created_on'])
 
-    return created
+    return created.map(project => new Project(project))
   } catch (err) {
     console.error(`Error adding projects: ${err}`)
 
@@ -51,7 +57,7 @@ const getProjects = async () => {
         created_on: 'project.created_on'
       })
 
-    return projects
+    return projects.map((project) => new Project(project))
   } catch (err) {
     console.error(`Error getting projects: ${err}`)
 
@@ -87,10 +93,7 @@ const getProject = async (id) => {
 
     const project = projects.reduce((acc, row) => {
       if (!acc.id) {
-        acc.id = row.id
-        acc.name = row.name
-        acc.created_on = row.created_on
-        acc.sessions = []
+        acc = new Project(row)
       }
 
       if (row.session_id) {

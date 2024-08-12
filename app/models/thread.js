@@ -1,26 +1,17 @@
 class Thread {
-  constructor(id, sessionId, name, startTime, endTime, input, output) {
-    this.id = id
-    this.session_id = sessionId
-    this.name = name
-    this.start_time = startTime
-    this.end_time = endTime
-    this.input = input
-    this.output = output
+  constructor(thread) {
+    this.id = thread.id
+    this.session_id = thread.session_id
+    this.name = thread.name
+    this.start_time = thread.start_time || new Date()
+    this.end_time = thread.end_time
+    this.input = thread.input
+    this.output = thread.output
+    this.steps = thread.steps || []
   }
 
-  static fromPayload(payload) {
-    const thread = new Thread(
-      payload.id,
-      payload.session_id,
-      payload.name,
-      payload.start_time ?? new Date(),
-      payload.end_time,
-      payload.input,
-      payload.output
-    )
-
-    return thread
+  addStep(step) {
+    this.steps.push(step)
   }
 }
 

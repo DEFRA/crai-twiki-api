@@ -1,12 +1,19 @@
 const { database } = require('../database')
+const Step = require('../models/step')
 
+/**
+ * Add multiple steps to datastore
+ * 
+ * @param {Step[]} steps - Array of steps to add
+ * @returns {Promise<Step[]>}
+ */
 const addSteps = async (steps) => {
   try {
     const created = await database
       .batchInsert('step', steps)
       .returning(['id', 'thread_id', 'name', 'start_time'])
 
-    return created
+    return created.map(step => new Step(step))
   } catch (err) {
     console.error(`Error adding steps: ${err}`)
 
@@ -22,12 +29,24 @@ const addSteps = async (steps) => {
   }
 }
 
+/**
+ * Add a single step to datastore
+ * 
+ * @param {Step} step - Step to add
+ * @returns {Promise<Step>}
+ */
 const addStep = async (step) => {
   const created = await addSteps([step])
 
   return created[0]
 }
 
+/**
+ * Get a step from the datastore
+ * 
+ * @param {String} id - UUID of step
+ * @returns {Promise<Step>}
+ */
 const getStep = async (id) => {
   try {
     const steps = await database('step')
@@ -51,7 +70,7 @@ const getStep = async (id) => {
       return null
     }
 
-    return steps[0]
+    return new Step(steps[0])
   } catch (err) {
     console.error(`Error getting step: ${err}`)
 
@@ -59,6 +78,13 @@ const getStep = async (id) => {
   }
 }
 
+/**
+ * Update a step in the datastore
+ * 
+ * @param {String} id - UUID of step
+ * @param {Step} step - Step to update
+ * @returns 
+ */
 const updateStep = async (id, step) => {
   try {
     const updated = await database('step')
@@ -71,7 +97,7 @@ const updateStep = async (id, step) => {
       .where('id', id)
       .returning(['id', 'thread_id', 'name', 'start_time', 'end_time', 'input', 'output'])
 
-    return updated[0]
+    return new Step(updated[0])
   } catch (err) {
     console.error(`Error updating step: ${err}`)
 

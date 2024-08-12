@@ -1,12 +1,26 @@
 const { database } = require('../database')
+const Session = require('../models/session')
 
+/**
+ * Add multiple sessions to datastore
+ * 
+ * @param {Session[]} sessions 
+ * @returns {Promise<Session[]>}
+ */
 const addSessions = async (sessions) => {
+  const data = sessions.map(session => ({
+    id: session.id,
+    project_id: session.project_id,
+    user: session.user,
+    start_time: session.start_time
+  }))
+  
   try {
     const created = await database
-      .batchInsert('session', sessions)
+      .batchInsert('session', data)
       .returning(['id', 'project_id', 'start_time'])
 
-    return created
+    return created.map(session => new Session(session))
   } catch (err) {
     console.error(`Error adding sessions: ${err}`)
 
@@ -22,12 +36,25 @@ const addSessions = async (sessions) => {
   }
 }
 
+/**
+ * Add a single session to datastore
+ * 
+ * @param {Session} session 
+ * @returns {Promise<Session>}
+ */
 const addSession = async (session) => {
   const created = await addSessions([session])
 
   return created[0]
 }
 
+/**
+ * Update a session in the datastore
+ * 
+ * @param {String} id - UUID of session
+ * @param {Session} session - Session object with updated fields
+ * @returns {Promise<Session>}
+ */
 const updateSession = async (id, session) => {
   try {
     const updated = await database('session')
@@ -37,7 +64,7 @@ const updateSession = async (id, session) => {
       .where('id', id)
       .returning(['id', 'project_id', 'start_time', 'end_time'])
 
-    return updated[0]
+    return new Session(updated[0])
   } catch (err) {
     console.error(`Error updating session: ${err}`)
 
@@ -45,6 +72,12 @@ const updateSession = async (id, session) => {
   }
 }
 
+/**
+ * Get a session from the datastore
+ * 
+ * @param {String} id 
+ * @returns {Promise<Session>}
+ */
 const getSession = async (id) => {
   try {
     const sessions = await database('session')
@@ -66,22 +99,17 @@ const getSession = async (id) => {
       return null
     }
 
-    const session = sessions.reduce((acc, curr) => {
+    const session = sessions.reduce((acc, row) => {
       if (!acc.id) {
-        acc.id = curr.id
-        acc.project_id = curr.project_id
-        acc.user = curr.user
-        acc.start_time = curr.start_time
-        acc.end_time = curr.end_time
-        acc.threads = []
+        acc = new Session(row)
       }
 
-      if (curr.thread_id) {
-        acc.threads.push({
-          id: curr.thread_id,
-          name: curr.thread_name,
-          start_time: curr.thread_start_time,
-          end_time: curr.thread_end_time
+      if (row.thread_id) {
+        acc.addThread({
+          id: row.thread_id,
+          name: row.thread_name,
+          start_time: row.thread_start_time,
+          end_time: row.thread_end_time
         })
       }
 

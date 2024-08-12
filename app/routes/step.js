@@ -1,5 +1,6 @@
 const Joi = require('joi')
 const { addStep, getStep, updateStep } = require('../repos/steps')
+const Step = require('../models/step')
 
 module.exports = [
   {
@@ -40,7 +41,7 @@ module.exports = [
     },
     handler: async (request, h) => {
       try {
-        const thread = request.payload
+        const thread = new Step(request.payload)
 
         const created = await addStep(thread)
 

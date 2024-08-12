@@ -1,5 +1,6 @@
 const Joi = require('joi')
 const { getThread, addThread, updateThread } = require('../repos/threads')
+const Thread = require('../models/thread')
 
 module.exports = [
   {
@@ -35,7 +36,7 @@ module.exports = [
     },
     handler: async (request, h) => {
       try {
-        const thread = request.payload
+        const thread = new Thread(request.payload)
 
         const created = await addThread(thread)
 

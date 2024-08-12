@@ -1,9 +1,26 @@
 const { database } = require('../database')
+const Thread = require('../models/thread')
 
+/**
+ * Add multiple threads to datastore
+ * 
+ * @param {Thread[]} threads 
+ * @returns {Promise<Thread[]>}
+ */
 const addThreads = async (threads) => {
+  const data = threads.map(thread => ({
+    id: thread.id,
+    session_id: thread.session_id,
+    name: thread.name,
+    start_time: thread.start_time,
+    end_time: thread.end_time,
+    input: thread.end_time,
+    output: thread.output
+  }))
+
   try {
     const created = await database
-      .batchInsert('thread', threads)
+      .batchInsert('thread', data)
       .returning(['id', 'session_id', 'name', 'start_time', 'input'])
 
     return created
@@ -22,12 +39,24 @@ const addThreads = async (threads) => {
   }
 }
 
+/**
+ * Add a single thread to datastore
+ * 
+ * @param {Thread} thread 
+ * @returns {Promise<Thread>}
+ */
 const addThread = async (thread) => {
   const created = await addThreads([thread])
 
   return created[0]
 }
 
+/**
+ * Get a thread from the datastore
+ * 
+ * @param {String} id
+ * @returns {Promise<Thread>}
+ */
 const getThread = async (id) => {
   try {
     const threads = await database('thread')
@@ -55,28 +84,21 @@ const getThread = async (id) => {
       return null
     }
 
-    const thread = threads.reduce((acc, curr) => {
+    const thread = threads.reduce((acc, row) => {
       if (!acc.id) {
-        acc.id = curr.id
-        acc.session_id = curr.session_id
-        acc.name = curr.name
-        acc.start_time = curr.start_time
-        acc.end_time = curr.end_time
-        acc.input = curr.input
-        acc.output = curr.output
-        acc.steps = []
+        acc = new Thread(row)
       }
 
-      if (curr.step_id) {
-        acc.steps.push({
-          id: curr.step_id,
-          thread_id: curr.thread_id,
-          name: curr.step_name,
-          type: curr.type,
-          start_time: curr.step_start_time,
-          end_time: curr.step_end_time,
-          input_tokens: curr.step_input_tokens,
-          output_tokens: curr.step_output_tokens
+      if (row.step_id) {
+        acc.addStep({
+          id: row.step_id,
+          thread_id: row.thread_id,
+          name: row.step_name,
+          type: row.type,
+          start_time: row.step_start_time,
+          end_time: row.step_end_time,
+          input_tokens: row.step_input_tokens,
+          output_tokens: row.step_output_tokens
         })
       }
 
@@ -91,6 +113,13 @@ const getThread = async (id) => {
   }
 }
 
+/**
+ * Update a thread in the datastore
+ *
+ * @param {String} id 
+ * @param {Thread} thread 
+ * @returns {Promise<Thread>}
+ */
 const updateThread = async (id, thread) => {
   try {
     const updated = await database('thread')

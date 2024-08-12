@@ -1,7 +1,7 @@
 const Joi = require('joi')
 
-const Project = require('../models/project')
 const { getProjects, getProject, addProject } = require('../repos/projects')
+const Project = require('../models/project')
 
 module.exports = [
   {
@@ -44,7 +44,7 @@ module.exports = [
     },
     handler: async (request, h) => {
       try {
-        const project = Project.fromPayload(request.payload)
+        const project = new Project(request.payload)
 
         const created = await addProject(project)
 
