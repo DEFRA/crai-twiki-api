@@ -1,8 +1,9 @@
 require('./insights').setup()
 const Hapi = require('@hapi/hapi')
+const { config } = require('./config')
 
 const server = Hapi.server({
-  port: process.env.PORT
+  port: config.get('port')
 })
 
 const routes = [].concat(
