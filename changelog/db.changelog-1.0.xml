@@ -87,13 +87,16 @@
                 <constraints nullable="false" foreignKeyName="fk_event_type" references="type(id)" />
             </column>
             <column name="content" type="TEXT" />
-            <column name="time" type="TIMESTAMP">
+            <column name="start_time" type="TIMESTAMP">
                 <constraints nullable="false" />
             </column>
+            <column name="end_time" type="TIMESTAMP" />
             <column name="model_name" type="TEXT">
                 <constraints nullable="false" />
             </column>
-            <column name="token_usage" type="INTEGER" />
+            <column name="completion_token_usage" type="INTEGER" />
+            <column name="prompt_token_usage" type="INTEGER" />
+            <column name="total_token_usage" type="INTEGER" />
             <column name="cost" type="MONEY" />
             <column name="additional_metadata" type="JSONB" />
         </createTable>
