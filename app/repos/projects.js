@@ -96,8 +96,6 @@ const getProject = async (id) => {
       if (row.session_id) {
         acc.sessions.push({
           id: row.session_id,
-          project_id: row.id,
-          project_name: row.name,
           user: row.user,
           start_time: row.session_start,
           end_time: row.session_end
