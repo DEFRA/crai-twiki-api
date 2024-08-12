@@ -30,7 +30,7 @@ const getSession = async (id) => {
       .select({
         id: 'session.id',
         project_id: 'session.project_id',
-        user,
+        user: 'session.user',
         start_time: 'session.start_time',
         end_time: 'session.end_time'
       })
