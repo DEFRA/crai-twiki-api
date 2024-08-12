@@ -8,21 +8,30 @@
     http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd
     http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
 
-    <changeSet author="DEFRA" id="1596009647200-0">
+    <changeSet author="Shaun Fitzsimons" id="0">
         <tagDatabase tag="v0.0.0"/>
     </changeSet>
 
-    <changeSet author="DEFRA" id="1596009647200-1">
+    <changeSet author="Shaun Fitzsimons" id="1">
         <tagDatabase tag="v1.0.0"/>
     </changeSet>
 
-    <changeSet author="Shaun Fitzsimons" id="1596009647200-2">
+    <changeSet author="Shaun Fitzsimons" id="2">
+        <sql>
+            CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+        </sql>
+        <rollback>
+            DROP EXTENSION IF EXISTS "uuid-ossp";
+        </rollback>
+    </changeSet>
+
+    <changeSet author="Shaun Fitzsimons" id="3">
         <createTable tableName="project">
-            <column name="id" type="INTEGER">
+            <column name="id" type="UUID" defaultValue="uuid_generate_v4()">
                 <constraints primaryKey="true" nullable="false" />
             </column>
             <column name="name" type="TEXT">
-                <constraints nullable="false" />
+                <constraints nullable="false" unique="true" uniqueConstraintName="unique_project_name"/>
             </column>
             <column name="created_on" type="TIMESTAMP">
                 <constraints nullable="false" />
@@ -51,10 +60,10 @@
         </createTable>
 
         <createTable tableName="session">
-            <column name="id" type="INTEGER">
+            <column name="id" type="UUID" defaultValue="uuid_generate_v4()">
                 <constraints primaryKey="true" nullable="false" />
             </column>
-            <column name="project_id" type="INTEGER">
+            <column name="project_id" type="UUID">
                 <constraints nullable="false" foreignKeyName="fk_session_project" references="project(id)" />
             </column>
             <column name="user" type="TEXT">
@@ -67,10 +76,11 @@
         </createTable>
 
         <createTable tableName="event">
-            <column name="id" type="INTEGER">
+            <column name="id" type="UUID" defaultValue="uuid_generate_v4()">
                 <constraints primaryKey="true" nullable="false" />
             </column>
-            <column name="session_id" type="INTEGER">
+            <column name="run_id" type="UUID" />
+            <column name="session_id" type="UUID">
                 <constraints nullable="false" foreignKeyName="fk_event_session" references="session(id)" />
             </column>
             <column name="type_id" type="INTEGER">
@@ -83,7 +93,6 @@
             <column name="model_name" type="TEXT">
                 <constraints nullable="false" />
             </column>
-            <column name="model_metadata" type="JSONB" />
             <column name="token_usage" type="INTEGER" />
             <column name="cost" type="MONEY" />
             <column name="additional_metadata" type="JSONB" />

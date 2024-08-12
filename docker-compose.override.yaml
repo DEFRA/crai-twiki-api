@@ -15,6 +15,11 @@ services:
       - ./test:/home/node/test
       - ./scripts:/home/node/scripts
       - ./package.json:/home/node/package.json
+    environment:
+      POSTGRES_HOST: ${POSTGRES_HOST:-host.docker.internal}
+      POSTGRES_DB: ${POSTGRES_DB:-crai-twiki-api}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ppp}
+      POSTGRES_USERNAME: ${POSTGRES_USERNAME:-postgres}
       
 
   crai-twiki-api-postgres:

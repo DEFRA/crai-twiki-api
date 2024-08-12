@@ -32,6 +32,9 @@ paths:
                 name:
                   type: string
                   pattern: '^[a-zA-Z0-9-]+$'
+                  minLength: 1
+                  maxLength: 255
+                  example: 'My Project'
               required: ['name']
       responses:
         '201':
@@ -42,9 +45,10 @@ paths:
                 type: object
                 properties:
                   id:
-                    type: string
+                    $ref: '#/components/schemas/uuid'
                   name:
                     type: string
+                    example: 'My Project'
                   created_on:
                     type: string
                     format: date-time
@@ -99,8 +103,10 @@ paths:
             schema:
               type: object
               properties:
+                session_id:
+                  $ref: '#/components/schemas/uuid'
                 project_id:
-                  type: string
+                  $ref: '#/components/schemas/uuid'
                 user:
                   type: string
                 start_time:
@@ -109,7 +115,7 @@ paths:
                 end_time:
                   type: string
                   format: date-time
-              required: ['project_id', 'name', 'start_time']
+              required: ['project_id', 'user', 'start_time']
       responses:
         '201':
           description: Session created
@@ -127,7 +133,7 @@ paths:
           in: path
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/uuid'
           description: The session ID
       responses:
         '200':
@@ -146,7 +152,7 @@ paths:
           in: path
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/uuid'
           description: The session ID
       requestBody:
         required: true
@@ -175,7 +181,7 @@ paths:
           in: path
           required: true
           schema:
-            type: string
+            $ref: '#/components/schemas/uuid'
           description: The event ID
       responses:
         '200':
@@ -197,7 +203,9 @@ paths:
               type: object
               properties:
                 session_id:
-                  type: string
+                  $ref: '#/components/schemas/uuid'
+                run_id:
+                  $ref: '#/components/schemas/uuid'
                 type:
                   type: string
                 content:
@@ -233,7 +241,7 @@ components:
       type: object
       properties:
         id:
-          type: string
+          $ref: '#/components/schemas/uuid'
         name:
           type: string
           pattern: '^[a-zA-Z0-9-]+$'
@@ -244,7 +252,7 @@ components:
       type: object
       properties:
         id:
-          type: string
+          $ref: '#/components/schemas/uuid'
         project_id:
           type: string
         user:
@@ -259,7 +267,9 @@ components:
       type: object
       properties:
         id:
-          type: string
+          $ref: '#/components/schemas/uuid'
+        run_id:
+          $ref: '#/components/schemas/uuid'
         session_id:
           type: string
         type:
@@ -319,8 +329,13 @@ components:
     ProjectSessions:
       type: object
       properties:
-        project:
-          $ref: '#/components/schemas/Project'
+        id: 
+          type: string
+        name:
+          type: string
+        created_on:
+          type: string
+          format: date-time
         sessions:
           type: array
           items:
@@ -334,3 +349,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Event'
+    uuid:
+      type: string
+      pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+      minLength: 36
+      maxLength: 36
