@@ -24,7 +24,7 @@ module.exports = [
     options: {
       validate: {
         payload: Joi.object({
-          session_id: Joi.string().uuid().required(),
+          id: Joi.string().uuid().required(),
           project_id: Joi.string().uuid().required(),
           user: Joi.string().required(),
           start_time: Joi.date().required(),
@@ -42,6 +42,10 @@ module.exports = [
       } catch (err) {
         if (err.type === 'ENTITY_CONFLICT') {
           return h.response().code(409)
+        }
+
+        if (err.type === 'PROJECT_NOT_FOUND') {
+          return h.response({ error: 'Project ID not found' }).code(400)
         }
 
         return h.response().code(500)

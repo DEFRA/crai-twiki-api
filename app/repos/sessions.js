@@ -14,6 +14,10 @@ const addSessions = async (sessions) => {
       err.type = 'ENTITY_CONFLICT'
     }
 
+    if (err.code === '23503') {
+      err.type = 'PROJECT_NOT_FOUND'
+    }
+    
     throw err
   }
 }
