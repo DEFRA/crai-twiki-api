@@ -8,7 +8,8 @@ const server = Hapi.server({
 
 const routes = [].concat(
   require('./routes/healthy'),
-  require('./routes/healthz')
+  require('./routes/healthz'),
+  require('./routes/projects')
 )
 
 server.route(routes)
