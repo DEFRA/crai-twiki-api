@@ -2,8 +2,8 @@
 # to provide dependencies and expose ports for local testing
 
 services:
-  ? crai-twiki-api
-  : build:
+  crai-twiki-api:
+    build:
       target: development
     image: crai-twiki-api-development
     container_name: crai-twiki-api-development
@@ -15,10 +15,15 @@ services:
       - ./test:/home/node/test
       - ./scripts:/home/node/scripts
       - ./package.json:/home/node/package.json
+    environment:
+      POSTGRES_HOST: ${POSTGRES_HOST:-host.docker.internal}
+      POSTGRES_DB: ${POSTGRES_DB:-crai-twiki-api}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ppp}
+      POSTGRES_USERNAME: ${POSTGRES_USERNAME:-postgres}
       
 
-  ? crai-twiki-api-postgres
-  : ports:
+  crai-twiki-api-postgres:
+    ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data

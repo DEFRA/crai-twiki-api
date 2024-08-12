@@ -1,6 +1,6 @@
 services:
-  ? crai-twiki-api
-  : command: >
+  crai-twiki-api:
+    command: >
       sh -c "npm run test:watch"
     volumes:
       - ./.git:/home/node/.git
