@@ -3,8 +3,8 @@ const { database } = require('../database')
 const addThreads = async (threads) => {
   try {
     const created = await database
-      .batchInsert('session', threads)
-      .returning(['id', 'session_id', 'name', 'start_time', 'input',])
+      .batchInsert('thread', threads)
+      .returning(['id', 'session_id', 'name', 'start_time', 'input'])
 
     return created
   } catch (err) {
@@ -38,15 +38,52 @@ const getThread = async (id) => {
         start_time: 'thread.start_time',
         end_time: 'thread.end_time',
         input: 'thread.input',
-        output: 'thread.output'
+        output: 'thread.output',
+        step_id: 'step.id',
+        thread_id: 'step.thread_id',
+        step_name: 'step.name',
+        type: 'step.type',
+        step_start_time: 'step.start_time',
+        step_end_time: 'step.end_time',
+        step_input_tokens: 'step.input_tokens',
+        step_output_tokens: 'step.output_tokens'
       })
+      .leftJoin('step', 'thread.id', 'step.thread_id')
       .where('thread.id', id)
 
     if (!threads.length) {
       return null
     }
 
-    return threads[0]
+    const thread = threads.reduce((acc, curr) => {
+      if (!acc.id) {
+        acc.id = curr.id
+        acc.session_id = curr.session_id
+        acc.name = curr.name
+        acc.start_time = curr.start_time
+        acc.end_time = curr.end_time
+        acc.input = curr.input
+        acc.output = curr.output
+        acc.steps = []
+      }
+
+      if (curr.step_id) {
+        acc.steps.push({
+          id: curr.step_id,
+          thread_id: curr.thread_id,
+          name: curr.step_name,
+          type: curr.type,
+          start_time: curr.step_start_time,
+          end_time: curr.step_end_time,
+          input_tokens: curr.step_input_tokens,
+          output_tokens: curr.step_output_tokens
+        })
+      }
+
+      return acc
+    }, {})
+
+    return thread
   } catch (err) {
     console.error(`Error getting thread: ${err}`)
 

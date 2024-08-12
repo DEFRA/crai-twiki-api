@@ -53,7 +53,11 @@ const getSession = async (id) => {
         project_id: 'session.project_id',
         user: 'session.user',
         start_time: 'session.start_time',
-        end_time: 'session.end_time'
+        end_time: 'session.end_time',
+        thread_id: 'thread.id',
+        thread_name: 'thread.name',
+        thread_start_time: 'thread.start_time',
+        thread_end_time: 'thread.end_time'
       })
       .leftJoin('thread', 'session.id', 'thread.session_id')
       .where('session.id', id)

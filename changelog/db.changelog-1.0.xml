@@ -38,15 +38,6 @@
             </column>
         </createTable>
 
-        <createTable tableName="type">
-            <column name="id" type="INTEGER">
-                <constraints primaryKey="true" nullable="false" />
-            </column>
-            <column name="name" type="TEXT">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-
         <createTable tableName="model">
             <column name="id" type="INTEGER">
                 <constraints primaryKey="true" nullable="false" />

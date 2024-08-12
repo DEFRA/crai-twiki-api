@@ -1,14 +1,14 @@
 const Joi = require('joi')
-const { getThread, addThread, updateThread } = require('../repos/threads')
+const { addStep, getStep, updateStep } = require('../repos/steps')
 
 module.exports = [
   {
     method: 'GET',
-    path: '/thread/{threadId}',
+    path: '/step/{stepId}',
     handler: async (request, h) => {
-      const { threadId } = request.params
+      const { stepId } = request.params
 
-      const thread = await getThread(threadId)
+      const thread = await getStep(stepId)
 
       if (!thread) {
         return h.response().code(404)
@@ -19,17 +19,22 @@ module.exports = [
   },
   {
     method: 'POST',
-    path: '/thread',
+    path: '/step',
     options: {
       validate: {
         payload: Joi.object({
           id: Joi.string().uuid().required(),
-          session_id: Joi.string().uuid().required(),
+          thread_id: Joi.string().uuid().required(),
           name: Joi.string().required(),
+          type: Joi.string().required(),
           start_time: Joi.date().required(),
           end_time: Joi.date().optional(),
           input: Joi.string().required(),
-          output: Joi.string().optional()
+          output: Joi.string().optional(),
+          model_name: Joi.string().required(),
+          model_metadata: Joi.object().required(),
+          input_tokens: Joi.number().optional(),
+          output_tokens: Joi.number().optional()
         }).required()
       }
     },
@@ -37,7 +42,7 @@ module.exports = [
       try {
         const thread = request.payload
 
-        const created = await addThread(thread)
+        const created = await addStep(thread)
 
         return h.response(created).code(201)
       } catch (err) {
@@ -55,25 +60,27 @@ module.exports = [
   },
   {
     method: 'PATCH',
-    path: '/thread/{threadId}',
+    path: '/step/{stepId}',
     options: {
       validate: {
         payload: Joi.object({
           end_time: Joi.date().optional(),
-          output: Joi.string().optional()
+          output: Joi.string().optional(),
+          input_tokens: Joi.number().optional(),
+          output_tokens: Joi.number().optional()
         }).required()
       }
     },
     handler: async (request, h) => {
-      const { threadId } = request.params
+      const { stepId } = request.params
 
-      const thread = await getThread(threadId)
+      const step = await getStep(stepId)
 
-      if (!thread) {
+      if (!step) {
         return h.response().code(404)
       }
 
-      const updated = await updateThread(threadId, request.payload)
+      const updated = await updateStep(stepId, request.payload)
 
       return h.response(updated).code(200)
     }
