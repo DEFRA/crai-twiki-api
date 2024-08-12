@@ -8,71 +8,52 @@
     http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd
     http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
 
-    <changeSet author="Shaun Fitzsimons" id="0">
-        <tagDatabase tag="v0.0.0"/>
-    </changeSet>
-
     <changeSet author="Shaun Fitzsimons" id="1">
-        <tagDatabase tag="v1.0.0"/>
+        <tagDatabase tag="v2.0.0"/>
     </changeSet>
 
     <changeSet author="Shaun Fitzsimons" id="2">
-        <sql>
-            CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-        </sql>
-        <rollback>
-            DROP EXTENSION IF EXISTS "uuid-ossp";
-        </rollback>
-    </changeSet>
-
-    <changeSet author="Shaun Fitzsimons" id="3">
-        <createTable tableName="project">
+        <createTable tableName="thread">
             <column name="id" type="UUID" defaultValue="uuid_generate_v4()">
                 <constraints primaryKey="true" nullable="false" />
             </column>
-            <column name="name" type="TEXT">
-                <constraints nullable="false" unique="true" uniqueConstraintName="unique_project_name"/>
+            <column name="session_id" type="UUID">
+                <constraints nullable="false" foreignKeyName="fk_thread_session" references="session(id)" />
             </column>
-            <column name="created_on" type="TIMESTAMP">
+            <column name="name" type="TEXT">
+                <constraints nullable="false" unique="true" />
+            </column>
+            <column name="start_time" type="TIMESTAMP">
                 <constraints nullable="false" />
             </column>
+            <column name="end_time" type="TIMESTAMP" />
+            <column name="input" type="TEXT" />
+            <column name="output" type="TEXT" />
         </createTable>
 
-        <createTable tableName="type">
-            <column name="id" type="INTEGER">
-                <constraints primaryKey="true" nullable="false" />
-            </column>
-            <column name="name" type="TEXT">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-
-        <createTable tableName="model">
-            <column name="id" type="INTEGER">
-                <constraints primaryKey="true" nullable="false" />
-            </column>
-            <column name="name" type="TEXT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="unit_cost" type="MONEY">
-                <constraints nullable="false" />
-            </column>
-        </createTable>
-
-        <createTable tableName="session">
+        <createTable tableName="step">
             <column name="id" type="UUID" defaultValue="uuid_generate_v4()">
                 <constraints primaryKey="true" nullable="false" />
             </column>
-            <column name="project_id" type="UUID">
-                <constraints nullable="false" foreignKeyName="fk_session_project" references="project(id)" />
+            <column name="thread_id" type="UUID">
+                <constraints nullable="false" foreignKeyName="fk_step_thread" references="thread(id)" />
             </column>
-            <column name="user" type="TEXT">
+            <column name="name" type="TEXT">
+                <constraints nullable="false" />
+            </column>
+            <column name="type" type="TEXT">
                 <constraints nullable="false" />
             </column>
             <column name="start_time" type="TIMESTAMP">
                 <constraints nullable="false" />
             </column>
             <column name="end_time" type="TIMESTAMP" />
+            <column name="input" type="TEXT" />
+            <column name="output" type="TEXT" />
+            <column name="model_name" type="VARCHAR(255)" />
+            <column name="model_metadata" type="JSONB" />
+            <column name="input_tokens" type="INTEGER" />
+            <column name="output_tokens" type="INTEGER" />
         </createTable>
     </changeSet>
 </databaseChangeLog>
