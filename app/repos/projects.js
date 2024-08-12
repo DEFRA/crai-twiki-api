@@ -33,7 +33,9 @@ const addProjects = async (projects) => {
  * @returns {Promise<Project>} - Created project
  */
 const addProject = async (project) => {
-  return addProjects([project])
+  const created = await addProjects([project])
+
+  return created[0]
 }
 
 /**
