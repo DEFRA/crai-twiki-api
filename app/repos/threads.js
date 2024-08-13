@@ -130,7 +130,7 @@ const updateThread = async (id, thread) => {
       .where('id', id)
       .returning(['id', 'session_id', 'name', 'start_time', 'end_time', 'input', 'output'])
 
-    return updated[0]
+    return new Thread(updated[0])
   } catch (err) {
     console.error(`Error updating thread: ${err}`)
 

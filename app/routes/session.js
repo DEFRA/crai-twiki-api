@@ -1,4 +1,5 @@
 const Joi = require('joi')
+
 const Session = require('../models/session')
 const { getSession, addSession, updateSession } = require('../repos/sessions')
 

@@ -1,7 +1,7 @@
 const Joi = require('joi')
 
-const { getProjects, getProject, addProject } = require('../repos/projects')
 const Project = require('../models/project')
+const { getProjects, getProject, addProject } = require('../repos/projects')
 
 module.exports = [
   {

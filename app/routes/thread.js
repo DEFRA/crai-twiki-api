@@ -1,6 +1,7 @@
 const Joi = require('joi')
-const { getThread, addThread, updateThread } = require('../repos/threads')
+
 const Thread = require('../models/thread')
+const { getThread, addThread, updateThread } = require('../repos/threads')
 
 module.exports = [
   {

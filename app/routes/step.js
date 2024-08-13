@@ -1,6 +1,7 @@
 const Joi = require('joi')
-const { addStep, getStep, updateStep } = require('../repos/steps')
+
 const Step = require('../models/step')
+const { addStep, getStep, updateStep } = require('../repos/steps')
 
 module.exports = [
   {
