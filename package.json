@@ -1,6 +1,6 @@
 {
   "name": "crai-twiki-api",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Backend Node API for observing / logging LLM application events",
   "homepage": "github.com?owner=defra&repo=crai-twiki-api&organization=defra",
   "main": "app/index.js",

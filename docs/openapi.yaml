@@ -376,7 +376,7 @@ components:
         project:
           $ref: '#/components/schemas/Project'
         sessions:
-          type: object
+          type: array
           properties:
             session_count:
               type: number
@@ -384,7 +384,7 @@ components:
             average_latency:
               type: number
               format: float
-            event_count:
+            thread_count:
               type: number
               format: int32
         model_usage:
