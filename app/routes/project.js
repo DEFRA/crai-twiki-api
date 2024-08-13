@@ -2,6 +2,7 @@ const Joi = require('joi')
 
 const Project = require('../models/project')
 const { getProjects, getProject, addProject } = require('../repos/projects')
+const { getProjectOverview } = require('../repos/overview')
 
 module.exports = [
   {
@@ -30,6 +31,21 @@ module.exports = [
       }
 
       return h.response(project).code(200)
+    }
+  },
+  {
+    method: 'GET',
+    path: '/project/{projectId}/overview',
+    handler: async (request, h) => {
+      const { projectId } = request.params
+
+      const overview = await getProjectOverview(projectId)
+
+      if (!overview) {
+        return h.response().code(404)
+      }
+
+      return h.response(overview).code(200)
     }
   },
   {

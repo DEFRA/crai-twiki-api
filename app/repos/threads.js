@@ -14,7 +14,7 @@ const addThreads = async (threads) => {
     name: thread.name,
     start_time: thread.start_time,
     end_time: thread.end_time,
-    input: thread.end_time,
+    input: thread.input,
     output: thread.output
   }))
 

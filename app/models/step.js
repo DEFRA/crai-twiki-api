@@ -3,6 +3,7 @@ class Step {
     this.id = step.id
     this.thread_id = step.thread_id
     this.name = step.name
+    this.type = step.type
     this.start_time = step.start_time || new Date()
     this.end_time = step.end_time
     this.input = step.input
