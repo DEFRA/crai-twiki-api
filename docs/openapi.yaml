@@ -394,6 +394,9 @@ components:
             properties:
               model_name:
                 type: string
+              date: 
+                type: string
+                format: date
               token_usage:
                 type: number
                 format: int32
