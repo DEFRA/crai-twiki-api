@@ -44,7 +44,7 @@ module.exports = [
     },
     handler: async (request, h) => {
       try {
-        const project = Project.fromPayload(request.payload)
+        const project = new Project(request.payload)
 
         const created = await addProject(project)
 

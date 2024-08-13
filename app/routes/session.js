@@ -1,4 +1,5 @@
 const Joi = require('joi')
+
 const Session = require('../models/session')
 const { getSession, addSession, updateSession } = require('../repos/sessions')
 
@@ -34,7 +35,7 @@ module.exports = [
     },
     handler: async (request, h) => {
       try {
-        const session = Session.fromPayload(request.payload)
+        const session = new Session(request.payload)
 
         const created = await addSession(session)
 

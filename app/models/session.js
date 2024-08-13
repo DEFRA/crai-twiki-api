@@ -1,22 +1,14 @@
 class Session {
-  constructor (id, projectId, user, startTime, endTime) {
-    this.id = id
-    this.project_id = projectId
-    this.user = user
-    this.start_time = startTime
-    this.end_time = endTime
+  constructor(session) {
+    this.id = session.id
+    this.project_id = session.project_id
+    this.user = session.user
+    this.start_time = session.start_time || new Date()
+    this.threads = session.threads || []
   }
 
-  static fromPayload (payload) {
-    const session = new Session(
-      payload.id,
-      payload.project_id,
-      payload.user,
-      payload.start_time,
-      payload.end_time
-    )
-
-    return session
+  addThread (thread) {
+    this.threads.push(thread)
   }
 }
 
