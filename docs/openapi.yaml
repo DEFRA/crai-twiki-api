@@ -373,8 +373,13 @@ components:
     ProjectOverview:
       type: object
       properties:
-        project:
-          $ref: '#/components/schemas/Project'
+        id: 
+          type: string
+        name:
+          type: string
+        created_on:
+          type: string
+          format: date-time
         sessions:
           type: array
           properties:

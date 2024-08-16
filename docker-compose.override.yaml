@@ -8,8 +8,8 @@ services:
     image: crai-twiki-api-development
     container_name: crai-twiki-api-development
     ports:
-      - "3000:3000"
-      - "9229:9229"
+      - "4001:3000"
+      - "9900:9229"
     volumes:
       - ./app:/home/node/app
       - ./test:/home/node/test
@@ -20,11 +20,12 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-crai-twiki-api}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ppp}
       POSTGRES_USERNAME: ${POSTGRES_USERNAME:-postgres}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5433}
       
 
   crai-twiki-api-postgres:
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

@@ -33,8 +33,8 @@ module.exports = [
           end_time: Joi.date().optional(),
           input: Joi.string().required(),
           output: Joi.string().optional(),
-          model_name: Joi.string().required(),
-          model_metadata: Joi.object().required(),
+          model_name: Joi.string().optional(),
+          model_metadata: Joi.object().optional(),
           input_tokens: Joi.number().optional(),
           output_tokens: Joi.number().optional()
         }).required()

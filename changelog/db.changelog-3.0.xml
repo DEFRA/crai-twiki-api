@@ -9,7 +9,7 @@
     http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
 
     <changeSet author="Shaun Fitzsimons" id="1">
-        <tagDatabase tag="v2.0.0"/>
+        <tagDatabase tag="v3.0.0"/>
     </changeSet>
 
     <changeSet author="Shaun Fitzsimons" id="2">

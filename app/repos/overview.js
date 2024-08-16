@@ -1,4 +1,3 @@
-const knex = require('knex')
 const { database } = require('../database')
 
 const getProjectOverview = async (id) => {
