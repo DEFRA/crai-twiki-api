@@ -1,5 +1,5 @@
 class Step {
-  constructor(step) {
+  constructor (step) {
     this.id = step.id
     this.thread_id = step.thread_id
     this.name = step.name

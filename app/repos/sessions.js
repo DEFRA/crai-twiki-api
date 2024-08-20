@@ -3,8 +3,8 @@ const Session = require('../models/session')
 
 /**
  * Add multiple sessions to datastore
- * 
- * @param {Session[]} sessions 
+ *
+ * @param {Session[]} sessions
  * @returns {Promise<Session[]>}
  */
 const addSessions = async (sessions) => {
@@ -14,7 +14,7 @@ const addSessions = async (sessions) => {
     user: session.user,
     start_time: session.start_time
   }))
-  
+
   try {
     const created = await database
       .batchInsert('session', data)
@@ -31,15 +31,15 @@ const addSessions = async (sessions) => {
     if (err.code === '23503') {
       err.type = 'PROJECT_NOT_FOUND'
     }
-    
+
     throw err
   }
 }
 
 /**
  * Add a single session to datastore
- * 
- * @param {Session} session 
+ *
+ * @param {Session} session
  * @returns {Promise<Session>}
  */
 const addSession = async (session) => {
@@ -50,7 +50,7 @@ const addSession = async (session) => {
 
 /**
  * Update a session in the datastore
- * 
+ *
  * @param {String} id - UUID of session
  * @param {Session} session - Session object with updated fields
  * @returns {Promise<Session>}
@@ -74,8 +74,8 @@ const updateSession = async (id, session) => {
 
 /**
  * Get a session from the datastore
- * 
- * @param {String} id 
+ *
+ * @param {String} id
  * @returns {Promise<Session>}
  */
 const getSession = async (id) => {

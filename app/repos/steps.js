@@ -3,7 +3,7 @@ const Step = require('../models/step')
 
 /**
  * Add multiple steps to datastore
- * 
+ *
  * @param {Step[]} steps - Array of steps to add
  * @returns {Promise<Step[]>}
  */
@@ -24,14 +24,14 @@ const addSteps = async (steps) => {
     if (err.code === '23503') {
       err.type = 'THREAD_NOT_FOUND'
     }
-    
+
     throw err
   }
 }
 
 /**
  * Add a single step to datastore
- * 
+ *
  * @param {Step} step - Step to add
  * @returns {Promise<Step>}
  */
@@ -43,7 +43,7 @@ const addStep = async (step) => {
 
 /**
  * Get a step from the datastore
- * 
+ *
  * @param {String} id - UUID of step
  * @returns {Promise<Step>}
  */
@@ -80,10 +80,10 @@ const getStep = async (id) => {
 
 /**
  * Update a step in the datastore
- * 
+ *
  * @param {String} id - UUID of step
  * @param {Step} step - Step to update
- * @returns 
+ * @returns
  */
 const updateStep = async (id, step) => {
   try {
