@@ -7,31 +7,31 @@ const { addSessions } = require('../repos/sessions')
 const { addSteps } = require('../repos/steps')
 const { addThreads } = require('../repos/threads')
 
+const processProjects = (projects) => projects.map(project => {
+  const projectData = new Project(project)
+  projectData.sessions = processSessions(project.sessions)
+  return projectData
+})
+
+const processSessions = (sessions) => sessions.map(session => {
+  const sessionData = new Session(session)
+  sessionData.threads = processThreads(session.threads)
+  return sessionData
+})
+
+const processThreads = (threads) => threads.map(thread => {
+  const threadData = new Thread(thread)
+  threadData.steps = processSteps(thread.steps)
+  return threadData
+})
+
+const processSteps = (steps) => steps.map(step => new Step(step))
+
 const processPayload = async (payload) => {
-  const projects = []
-  const sessions = []
-  const threads = []
-  const steps = []
-
-  payload.projects.forEach(project => {
-    const projectData = new Project(project)
-    projects.push(projectData)
-
-    project.sessions.forEach(session => {
-      const sessionData = new Session(session)
-      sessions.push(sessionData)
-
-      session.threads.forEach(thread => {
-        const threadData = new Thread(thread)
-        threads.push(threadData)
-
-        thread.steps.forEach(step => {
-          const stepData = new Step(step)
-          steps.push(stepData)
-        })
-      })
-    })
-  })
+  const projects = processProjects(payload.projects)
+  const sessions = projects.flatMap(project => project.sessions)
+  const threads = sessions.flatMap(session => session.threads)
+  const steps = threads.flatMap(thread => thread.steps)
 
   await addProjects(projects)
   await addSessions(sessions)
