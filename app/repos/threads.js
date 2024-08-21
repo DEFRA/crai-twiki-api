@@ -3,8 +3,8 @@ const Thread = require('../models/thread')
 
 /**
  * Add multiple threads to datastore
- * 
- * @param {Thread[]} threads 
+ *
+ * @param {Thread[]} threads
  * @returns {Promise<Thread[]>}
  */
 const addThreads = async (threads) => {
@@ -34,15 +34,15 @@ const addThreads = async (threads) => {
     if (err.code === '23503') {
       err.type = 'SESSION_NOT_FOUND'
     }
-    
+
     throw err
   }
 }
 
 /**
  * Add a single thread to datastore
- * 
- * @param {Thread} thread 
+ *
+ * @param {Thread} thread
  * @returns {Promise<Thread>}
  */
 const addThread = async (thread) => {
@@ -53,7 +53,7 @@ const addThread = async (thread) => {
 
 /**
  * Get a thread from the datastore
- * 
+ *
  * @param {String} id
  * @returns {Promise<Thread>}
  */
@@ -116,8 +116,8 @@ const getThread = async (id) => {
 /**
  * Update a thread in the datastore
  *
- * @param {String} id 
- * @param {Thread} thread 
+ * @param {String} id
+ * @param {Thread} thread
  * @returns {Promise<Thread>}
  */
 const updateThread = async (id, thread) => {

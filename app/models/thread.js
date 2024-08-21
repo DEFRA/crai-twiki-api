@@ -1,5 +1,5 @@
 class Thread {
-  constructor(thread) {
+  constructor (thread) {
     this.id = thread.id
     this.session_id = thread.session_id
     this.name = thread.name
@@ -10,7 +10,7 @@ class Thread {
     this.steps = thread.steps || []
   }
 
-  addStep(step) {
+  addStep (step) {
     this.steps.push(step)
   }
 }

@@ -1,11 +1,10 @@
-const knex = require('knex')
 const { database } = require('../database')
 
 const getProjectOverview = async (id) => {
   const project = await database('project')
     .select('id', 'name', 'created_on')
     .where('id', id)
-  
+
   const sessions = await database('session')
     .select({
       date: database.raw('DATE(session.start_time)')
@@ -35,7 +34,7 @@ const getProjectOverview = async (id) => {
     .innerJoin('session', 'thread.session_id', 'session.id')
     .where('session.project_id', id)
     .groupBy('model_name', database.raw('DATE(step.start_time)'))
-    
+
   return {
     project,
     sessions,

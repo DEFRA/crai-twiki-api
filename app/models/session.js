@@ -1,5 +1,5 @@
 class Session {
-  constructor(session) {
+  constructor (session) {
     this.id = session.id
     this.project_id = session.project_id
     this.user = session.user
