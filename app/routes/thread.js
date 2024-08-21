@@ -2,6 +2,7 @@ const Joi = require('joi')
 
 const Thread = require('../models/thread')
 const { getThread, addThread, updateThread } = require('../repos/threads')
+const { schema } = require('../schemas/thread')
 
 module.exports = [
   {
@@ -24,15 +25,7 @@ module.exports = [
     path: '/thread',
     options: {
       validate: {
-        payload: Joi.object({
-          id: Joi.string().uuid().required(),
-          session_id: Joi.string().uuid().required(),
-          name: Joi.string().required(),
-          start_time: Joi.date().required(),
-          end_time: Joi.date().optional(),
-          input: Joi.string().required(),
-          output: Joi.string().optional()
-        }).required()
+        payload: schema
       }
     },
     handler: async (request, h) => {

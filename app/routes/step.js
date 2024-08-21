@@ -2,6 +2,7 @@ const Joi = require('joi')
 
 const Step = require('../models/step')
 const { addStep, getStep, updateStep } = require('../repos/steps')
+const { schema } = require('../schemas/step')
 
 module.exports = [
   {
@@ -24,20 +25,7 @@ module.exports = [
     path: '/step',
     options: {
       validate: {
-        payload: Joi.object({
-          id: Joi.string().uuid().required(),
-          thread_id: Joi.string().uuid().required(),
-          name: Joi.string().required(),
-          type: Joi.string().required(),
-          start_time: Joi.date().required(),
-          end_time: Joi.date().optional(),
-          input: Joi.string().required(),
-          output: Joi.string().optional(),
-          model_name: Joi.string().required(),
-          model_metadata: Joi.object().required(),
-          input_tokens: Joi.number().optional(),
-          output_tokens: Joi.number().optional()
-        }).required()
+        payload: schema
       }
     },
     handler: async (request, h) => {

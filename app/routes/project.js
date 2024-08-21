@@ -1,8 +1,7 @@
-const Joi = require('joi')
-
 const Project = require('../models/project')
 const { getProjects, getProject, addProject } = require('../repos/projects')
 const { getProjectOverview } = require('../repos/overview')
+const { schema } = require('../schemas/project')
 
 module.exports = [
   {
@@ -53,9 +52,7 @@ module.exports = [
     path: '/project',
     options: {
       validate: {
-        payload: Joi.object({
-          name: Joi.string().regex(/^[a-zA-Z0-9 ]+$/).required()
-        }).required()
+        payload: schema
       }
     },
     handler: async (request, h) => {

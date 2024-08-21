@@ -2,6 +2,7 @@ const Joi = require('joi')
 
 const Session = require('../models/session')
 const { getSession, addSession, updateSession } = require('../repos/sessions')
+const { schema } = require('../schemas/session')
 
 module.exports = [
   {
@@ -24,13 +25,7 @@ module.exports = [
     path: '/session',
     options: {
       validate: {
-        payload: Joi.object({
-          id: Joi.string().uuid().required(),
-          project_id: Joi.string().uuid().required(),
-          user: Joi.string().required(),
-          start_time: Joi.date().required(),
-          end_time: Joi.date().optional()
-        }).required()
+        payload: schema
       }
     },
     handler: async (request, h) => {
